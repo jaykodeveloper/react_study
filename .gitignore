@@ -1,0 +1,4 @@
+**/node_modules/**
+**/.vscode/**
+**/nasa-apod/src/lib/api.js
+**/public/**
