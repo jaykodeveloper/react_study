@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import * as courseActions from '../../redux/actions/courseActions';
 import PropTypes from 'prop-types';
 
+// option 3 bindActionCreators
+import { bindActionCreators } from 'redux';
+
 class CoursesPage extends React.Component {
     state = {
         course: {
@@ -19,7 +22,13 @@ class CoursesPage extends React.Component {
 
     handleSumit = e => {
         e.preventDefault();
-        this.props.dispatch(courseActions.createCourse(this.state.course));
+        //option 1
+        // this.props.dispatch(courseActions.createCourse(this.state.course))
+
+        // option 2
+        this.props.createCourse(this.state.course);
+        //option 3
+        // this.props.actions.createCourse(this.state.course)
     }
 
     render() {
@@ -42,8 +51,19 @@ class CoursesPage extends React.Component {
 };
 
 CoursesPage.propType = {
+    // option 1
+    /*
     dispatch: PropTypes.func.isRequired,
+    courses: PropTypes.array.isRequired
+    */
+    // option 2
+    createCourse: PropTypes.func.isRequired,
     courses: PropTypes.array.isRequired,
+    //option 3
+    /*
+    action: PropTypes.object.isRequired,
+    courses: PropTypes.array.isRequired,
+    */
 }
 
 function mapStateToProps(state, ownProps) {
@@ -52,4 +72,35 @@ function mapStateToProps(state, ownProps) {
     }
 }
 
-export default connect(mapStateToProps)(CoursesPage);
+// option2 manually wrap
+function mapDispatchToProps(dispatch) {
+    return {
+        createCourse: course => dispatch(courseActions.createCourse(course))
+    }
+}
+
+// option3 bindActionCreators
+/**
+function mapDispatchToProps(dispatch){
+    return {
+        // all actions. if you have one, you can specific one only,
+        // createCourse: ...
+        actions: bindActionCreators(courseActions, dispatch);
+    }
+}
+ */
+
+// option 4 make object
+// when declared as an object, each property is automatically bound to dispatch
+/*
+const mapDispatchToProps = {
+    createCourse: courseActions.createCourse
+}
+*/
+
+// option 1 ignore
+// export default connect(mapStateToProps)(CoursesPage);
+
+
+// option 2, 3, 4
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
