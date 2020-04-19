@@ -25,7 +25,7 @@ This app simply makes course selection webapp that mimic pluralsight
    action -> store -> react -> action
               ||
            reducers
-   ```
+   ``` 
    store communicates reducers
 
 Redux short example
@@ -57,4 +57,100 @@ Object.assign({}, state, {role: 'admin'})
 // spread
 const newState = {...state, role: 'admin'} // right side is shallow copy
 // arguments on the right override arguments on the left
+```
+
+## Redux has provider, connect
+
+### connect
+```javascript
+//connect
+function mapStateToProps(state, ownProps){
+    return { authors: state.authors};
+}
+export default connect(mapStateToProps, mapDispatchToProps)(AuthorPage);
+```
+
+#### mapStateToProps
+```javascript
+// mapStateToProps
+/*
+: what state should I expose as props.
+what part of the Redux store you want to expose as props on your component. 
+The component will subscribe to the Redux store updates.
+Any time it updates, mapStateToProps will be called
+*/
+//example
+function mapStateToProps(state){
+    return {
+        appState: state
+    }
+}
+// In my component, I could call this.props.appState to access Redux store data.
+
+// In case expose part of more store state in the component, we can specify the specific pieces of state that I want to expose via props
+function mapStateToProps(state){
+    return {
+        users: state.users
+        // key will be prop on the component
+    }
+}
+```
+
+#### mapDispatchToProps
+: what actions do I want on props<br/>
+It receives dispatches as its loan parameter. <br/>
+It returns callback props that you want to pass down<br/><br/>
+There are 4 ways to handle mapDispatchToProps
+1. ignore it
+2. wrap manually
+3. bindActionCreators
+4. return object
+
+1. ignore it (use dispatch directly)
+```javascript
+this.props.dispatch(loadCourses()) //loadUsers, loadWhatever ...
+/*
+2 downsides
+1. it requires more boilerplate
+2.redux concerns in child components
+*/
+```
+
+2. wrap manually
+```javascript
+function mapDispatchToProps(dispatch){
+    return {
+        loadCourses: () => {
+            dispatch(loadCourses());
+        },
+        createCourse: course => {
+            dispatch(createCourse(course));
+        },
+        updateCourse: course => {
+            dispatch(updateCourse(course));
+        }
+    }
+}
+this.props.loadCourses()
+```
+
+3. bindActionCreators
+```javascript
+ funciton mapDispatchToProps(dispatch){
+     return {
+         actions: bindActionCreators(actions, dispatch)
+     };
+ }
+
+this.props.actions.loadCourses();
+```
+
+4. mapDispatchToProps as Object
+```javascript
+const mapDispatchToProps = {
+    loadCourses
+    // wrapped in dispatch automatically
+}
+
+this.props.loadCourses();
 ```
