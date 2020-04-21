@@ -6,45 +6,23 @@ import PropTypes from 'prop-types';
 // option 3 bindActionCreators
 import { bindActionCreators } from 'redux';
 
+import CoursesList from './CoursesList';
+
 class CoursesPage extends React.Component {
-    state = {
-        course: {
-            title: ""
-        }
-    }
-
-    handleChange = e => {
-        const newCourse = { ...this.state.course, title: e.target.value }
-        this.setState({
-            course: newCourse
-        })
-    }
-
-    handleSumit = e => {
-        e.preventDefault();
-        //option 1
-        // this.props.dispatch(courseActions.createCourse(this.state.course))
-
+    componentDidMount() {
         // option 2
-        this.props.createCourse(this.state.course);
-        //option 3
-        // this.props.actions.createCourse(this.state.course)
+        // this.props.loadCourses()
+        this.props.actions.loadCourses()
+            .catch(err => {
+                alert(err)
+            })
     }
 
     render() {
         return (
             <>
-                <form onSubmit={this.handleSumit}>
-                    <input
-                        type="text"
-                        onChange={this.handleChange}
-                        value={this.state.course.title}
-                    />
-                    <input type="submit" value="Save" />
-                    {this.props.courses.length > 0 && this.props.courses.map(course => (
-                        <div key={course.title}>{course.title}</div>
-                    ))}
-                </form>
+                <h2>Courses </h2>
+                <CoursesList courses={this.props.courses} />
             </>
         );
     }
@@ -57,13 +35,12 @@ CoursesPage.propType = {
     courses: PropTypes.array.isRequired
     */
     // option 2
-    createCourse: PropTypes.func.isRequired,
-    courses: PropTypes.array.isRequired,
+    // createCourse: PropTypes.func.isRequired,
+    // loadCourses: PropTypes.func.isRequired,
+    // courses: PropTypes.array.isRequired,
     //option 3
-    /*
-    action: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
     courses: PropTypes.array.isRequired,
-    */
 }
 
 function mapStateToProps(state, ownProps) {
@@ -73,22 +50,21 @@ function mapStateToProps(state, ownProps) {
 }
 
 // option2 manually wrap
-function mapDispatchToProps(dispatch) {
-    return {
-        createCourse: course => dispatch(courseActions.createCourse(course))
-    }
-}
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         createCourse: course => dispatch(courseActions.createCourse(course)),
+//         loadCourses: () => dispatch(courseActions.loadCourses())
+//     }
+// }
 
 // option3 bindActionCreators
-/**
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
     return {
         // all actions. if you have one, you can specific one only,
         // createCourse: ...
-        actions: bindActionCreators(courseActions, dispatch);
+        actions: bindActionCreators(courseActions, dispatch)
     }
 }
- */
 
 // option 4 make object
 // when declared as an object, each property is automatically bound to dispatch
