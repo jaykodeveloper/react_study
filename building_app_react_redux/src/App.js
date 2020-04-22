@@ -9,6 +9,7 @@ import AboutPage from './components/about/AboutPage';
 import Header from './components/common/Header'
 import NotFound from './components/common/NotFound'
 import CoursesPage from './components/courses/CoursesPage'
+import ManageCourse from './components/courses/ManageCourse';
 
 import configureStore from './redux/configureStore';
 
@@ -24,6 +25,8 @@ function App() {
             <Route exact path="/" component={HomePage} />
             <Route path="/about" component={AboutPage} />
             <Route path="/courses" component={CoursesPage} />
+            <Route path="/course/:slug" component={ManageCourse} />
+            <Route path="/course" component={ManageCourse} />
             <Route component={NotFound} />T
         </Switch>
         </div>
