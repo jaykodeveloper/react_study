@@ -10,6 +10,8 @@ const courseReducer = (state = initialState.courses, action) => {
         case types.UPDATE_COURSES_SUCCESS:
             return state.map(course =>
                 course.id === action.course.id ? state.course : course)
+        case types.DELETE_COURSE_OPTIMISTIC:
+            return state.filter(course => course.id !== action.course.id)
         default:
             return state;
     }

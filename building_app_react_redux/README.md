@@ -252,3 +252,8 @@ export function deleteAuthor(autorId) {
 ##### Why use **async** middleware?
 
 > Consistency, Purity, Easier testing
+
+## Quick tips
+
+1. react-toastify
+   > This popup notification library.

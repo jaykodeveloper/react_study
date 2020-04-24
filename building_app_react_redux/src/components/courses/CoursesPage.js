@@ -3,13 +3,20 @@ import { connect } from 'react-redux'
 import * as courseActions from '../../redux/actions/courseActions';
 import * as authorActions from '../../redux/actions/authorActions'
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 // option 3 bindActionCreators
 import { bindActionCreators } from 'redux';
 
 import CoursesList from './CoursesList';
+import Spinner from '../common/Spinner';
+import { toast } from 'react-toastify';
+
 
 class CoursesPage extends React.Component {
+    state = {
+        redirectToAddCoursePage: false
+    }
     componentDidMount() {
         // option 2
         // this.props.loadCourses()
@@ -29,11 +36,42 @@ class CoursesPage extends React.Component {
         }
     }
 
+    handleDeleteCourse = async course => {
+        toast.success("Course deleted!");
+        try {
+            await this.props.actions.deleteCourse(course)
+        }
+        catch (err) {
+            toast.error("Delete failed" + err.message, { autoClose: false })
+        }
+    }
+
     render() {
         return (
             <>
+                {this.state.redirectToAddCoursePage && <Redirect to='/course' />}
                 <h2>Courses </h2>
-                <CoursesList courses={this.props.courses} />
+                {
+                    this.props.loading ?
+                        <Spinner /> :
+                        (
+                            <>
+                                <button
+                                    style={{ marginBottom: 20 }}
+                                    className="btn btn-primary add-course"
+                                    onClick={() => this.setState({ redirectToAddCoursePage: true })}
+                                >
+                                    Add Course
+                        </button>
+                                <CoursesList
+                                    courses={this.props.courses}
+                                    onDeleteClick={this.handleDeleteCourse}
+                                />
+                            </>
+                        )
+                }
+
+
             </>
         );
     }
@@ -53,6 +91,7 @@ CoursesPage.propType = {
     actions: PropTypes.object.isRequired,
     courses: PropTypes.array.isRequired,
     authors: PropTypes.array.isRequired,
+    loading: PropTypes.bool.isRequired
 }
 
 function mapStateToProps(state, ownProps) {
@@ -61,10 +100,12 @@ function mapStateToProps(state, ownProps) {
             state.courses.map(course => {
                 return {
                     ...course,
-                    authorName: state.authors.find(a => a.id === course.authorId).name
+                    authorName:
+                        state.authors.find(a => a.id === course.authorId).name
                 };
             }),
-        authors: state.authors
+        authors: state.authors,
+        loading: state.apiStatus > 0
     }
 }
 
@@ -84,6 +125,7 @@ function mapDispatchToProps(dispatch) {
         actions: {
             loadCourses: bindActionCreators(courseActions.loadCourses, dispatch),
             loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch),
+            deleteCourse: bindActionCreators(courseActions.deleteCourse, dispatch),
         }
     }
 }
