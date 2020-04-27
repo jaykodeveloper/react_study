@@ -15,7 +15,6 @@ export function loadAuthors() {
         return authorApi
             .getAuthors()
             .then(authors => {
-                console.log(authors)
                 dispatch(loadAuthorsSuccess(authors))
             })
             .catch(err => {

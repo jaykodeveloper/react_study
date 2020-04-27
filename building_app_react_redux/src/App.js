@@ -8,7 +8,7 @@ import AboutPage from './components/about/AboutPage';
 import Header from './components/common/Header'
 import NotFound from './components/common/NotFound'
 import CoursesPage from './components/courses/CoursesPage'
-import ManageCourse from './components/courses/ManageCourse';
+import ManageCourse from './components/courses/ManageCourse'; // eslint-disable-line import/no-named-as-default
 
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";

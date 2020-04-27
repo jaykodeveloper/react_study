@@ -253,6 +253,61 @@ export function deleteAuthor(autorId) {
 
 > Consistency, Purity, Easier testing
 
+## Testing
+
+`create-react-app` has a little bit different configuration than normal `node` app.
+Put the `setupTests.js` in `src` folder for setup.
+
+### snapshot
+
+It snapshots at the moment of the component and it compares with changes
+
+### enzyme
+
+Two ways to render a React component for testing with Enzyme
+
+- shallow: Renders single component
+  - No DOM is created
+  - No child components are rendered
+  - Fase, lightweight. Test one component in isolation
+    There is one pattern that can do tricks!
+
+```javascript
+function renderCourseForm(args) {
+  const defaultProps = {
+    author: [],
+    course: {},
+    saving: false,
+    errors: {},
+    onSave: () => {},
+    onChange: () => {},
+  };
+  const props = { ...defaultProps, ...args };
+  return shallow(<CourseForm {...prop} />);
+}
+```
+
+- mount: Renders component with children
+  - DOM is created in memory via JSDOM
+  - Child components are rendered.
+  - More realistice. Render components and children
+
+### Testing Container Components
+
+> They are wrapped in a call to **connect**
+
+1. Wrap with `<Provider>`
+
+   - can create custom store for the test
+
+2. Add named export for unconnected component
+
+### Testing Thunks
+
+- Mock two things
+  - Store (redux-mock-store)
+  - HTTP calls (fetch-mock)
+
 ## Quick tips
 
 1. react-toastify
